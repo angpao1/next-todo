@@ -17,8 +17,8 @@ A simple Todo application built with Next.js and Apollo Client, connected to a H
 1. **Clone the repository:**
 
 ```bash
-git clone https://github.com/your-username/todo-app.git
-cd todo-app
+git clone https://github.com/angpao1/next-todo.git
+cd next-todo
 ```
 ## Install dependencies
 ```bash

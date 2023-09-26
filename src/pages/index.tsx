@@ -1,0 +1,12 @@
+import {useAuth} from "@/hook/useAuth";
+
+export default function Page() {
+
+    useAuth();
+
+    return (
+        <main className="flex min-h-screen flex-col items-center justify-between p-24">
+
+        </main>
+    )
+}

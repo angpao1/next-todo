@@ -1,12 +1,12 @@
 import Link from "next/link";
 import {useLazyQuery} from '@apollo/client';
 import {LOGIN_USER} from '@/grahpql/auth-queries';
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useRouter} from 'next/navigation'
 
 export default function SignInPage() {
     const router = useRouter()
-
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     useEffect(() => {
         // Check if the user key exists in localStorage
         const user = localStorage.getItem('user');
@@ -15,20 +15,25 @@ export default function SignInPage() {
         }
     }, [router]);
 
-    const [loginUser, {loading, error}] = useLazyQuery(LOGIN_USER);
+    const [loginUser, {loading, error}] = useLazyQuery(LOGIN_USER, {
+        onError: (error) => {
+            setErrorMessage("Username or password is incorrect");
+        },
+        onCompleted: (data) => {
+            if (data.users.length > 0) {
+                localStorage.setItem('user', JSON.stringify(data.users[0]));
+                router.push('/todo');
+            } else {
+                setErrorMessage("Username or password is incorrect");
+            }
+        }
+    });
 
     const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const username = (event.currentTarget.elements.namedItem('username') as HTMLInputElement).value;
         const password = (event.currentTarget.elements.namedItem('password') as HTMLInputElement).value;
-
-        try {
-            const {data} = await loginUser({variables: {username, password}});
-            localStorage.setItem('user', JSON.stringify(data.users[0]));
-            router.push('/todo')
-        } catch (loginError) {
-            console.error('Login error:', loginError);
-        }
+        await loginUser({variables: {username, password}});
     };
 
     return (
@@ -51,7 +56,11 @@ export default function SignInPage() {
                                    placeholder="Password"/>
                         </div>
                     </div>
-
+                    {errorMessage && (
+                        <div className="text-center text-red-500 mb-4">
+                            {errorMessage}
+                        </div>
+                    )}
                     <div>
                         <button type="submit"
                                 className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">

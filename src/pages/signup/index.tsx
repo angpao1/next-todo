@@ -1,11 +1,12 @@
 import { useMutation } from '@apollo/client';
 import { REGISTER_USER } from '@/grahpql/auth-queries';
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 
 export default function SignUpPage() {
 
     const router = useRouter();
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     useEffect(() => {
         // Check if the user key exists in localStorage
@@ -15,20 +16,27 @@ export default function SignUpPage() {
         }
     }, [router]);
 
-    const [registerUser, { loading, error }] = useMutation(REGISTER_USER);
+    const [registerUser, { loading, error }] = useMutation(REGISTER_USER, {
+        onError: (error) => {
+            // Check for a specific error message or code indicating a duplicate user
+            if (error.message.includes('duplicate')) {
+                setErrorMessage('Username is already taken');
+            } else {
+                setErrorMessage('Registration error');
+            }
+        },
+        onCompleted: (data) => {
+            localStorage.setItem('user', JSON.stringify(data.insert_users.returning[0]));
+            router.push('/todo');
+        }
+    });
 
     const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const username = (event.currentTarget.elements.namedItem('username') as HTMLInputElement).value;
         const password = (event.currentTarget.elements.namedItem('password') as HTMLInputElement).value;
+        await registerUser({variables: {username, password}});
 
-        try {
-            const { data } = await registerUser({ variables: { username, password } });
-            localStorage.setItem('user', JSON.stringify(data.insert_users.returning[0]));
-            router.push('/todo');
-        } catch (registerError) {
-            console.error('Registration error:', registerError);
-        }
     };
 
     return (
@@ -51,7 +59,11 @@ export default function SignUpPage() {
                                    placeholder="Password"/>
                         </div>
                     </div>
-
+                    {errorMessage && (
+                        <div className="text-center text-red-500 mb-4">
+                            {errorMessage}
+                        </div>
+                    )}
                     <div>
                         <button type="submit"
                                 className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">

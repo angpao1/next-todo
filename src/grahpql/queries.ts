@@ -62,13 +62,3 @@ export const DELETE_TASK = gql`
         }
     }
 `;
-
-export const SUBSCRIBE_TASKS_BY_USER_ID = gql`
-    subscription SubscribeTasksByUserId($user_id: uuid!) {
-        tasks(where: { user_id: { _eq: $user_id } }) {
-            title
-            description
-            id
-        }
-    }
-`;

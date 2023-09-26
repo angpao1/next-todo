@@ -3,7 +3,7 @@
 A simple Todo application built with Next.js and Apollo Client, connected to a Hasura GraphQL endpoint.
 
 ### Live demo
-https://next-todo-oks3i6zo1-angpao1.vercel.app
+https://next-todo-angpao1.vercel.app/todo
 
 ## Features
 

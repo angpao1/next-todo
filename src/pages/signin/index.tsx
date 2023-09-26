@@ -13,7 +13,7 @@ export default function SignInPage() {
         if (user) {
             router.push('/todo');
         }
-    }, []);
+    }, [router]);
 
     const [loginUser, {loading, error}] = useLazyQuery(LOGIN_USER);
 
@@ -61,7 +61,7 @@ export default function SignInPage() {
 
                     <div className="text-center mt-12">
                         <span>
-                            Don't have an account?
+                            Don&apos;t have an account?
                         </span>
                         <Link
                             className="font-light text-md text-indigo-600 underline font-semibold hover:text-indigo-800"

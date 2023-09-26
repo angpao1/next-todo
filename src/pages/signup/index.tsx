@@ -13,7 +13,7 @@ export default function SignUpPage() {
         if (user) {
             router.push('/todo');
         }
-    }, []);
+    }, [router]);
 
     const [registerUser, { loading, error }] = useMutation(REGISTER_USER);
 

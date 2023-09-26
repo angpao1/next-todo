@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { REGISTER_USER } from '@/grahpql/auth-queries';
+import { REGISTER_USER } from '@/grahpql/queries';
 import React, {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 

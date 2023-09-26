@@ -1,6 +1,6 @@
 import Link from "next/link";
 import {useLazyQuery} from '@apollo/client';
-import {LOGIN_USER} from '@/grahpql/auth-queries';
+import {LOGIN_USER} from '@/grahpql/queries';
 import React, {useEffect, useState} from "react";
 import {useRouter} from 'next/navigation'
 

@@ -1,6 +1,6 @@
 import { useAuth } from './useAuth';
 import { useQuery, useMutation } from "@apollo/client";
-import { GET_TASKS, ADD_TASK, UPDATE_TASK, DELETE_TASK } from "@/grahpql/auth-queries";
+import { GET_TASKS, ADD_TASK, UPDATE_TASK, DELETE_TASK } from "@/grahpql/queries";
 
 export const useTasks = () => {
     const userId = useAuth();
